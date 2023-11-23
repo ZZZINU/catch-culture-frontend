@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import * as S from './style';
 import LogoImg from '../../assets/images/logo.png';
@@ -9,6 +9,9 @@ import BannerImg3 from '../../assets/images/main/banner3.png';
 import EventCard from '../../components/eventCard/EventCard';
 import SearchBox from '../../components/search/searchBox/SearchBox';
 
+// api
+import axios from '../../api/axios';
+
 // 슬라이더
 import { SwiperSlide } from 'swiper/react';
 import 'swiper/css';
@@ -16,6 +19,25 @@ import 'swiper/css/pagination';
 import { Pagination } from 'swiper/modules';
 
 function Main() {
+  // data
+  const [data, setData] = useState([]);
+
+  // 초기
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get('cultural-event');
+
+      //데이터 저장
+      setData(response.data);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   return (
     <>
       <S.MainWrapper>
@@ -52,7 +74,7 @@ function Main() {
               <S.EventHeaderMore>더보기</S.EventHeaderMore>
             </Link>
           </S.EventHeader>
-          <EventCard />
+          <EventCard data={data} />
         </S.EventWrapper>
       </S.MainWrapper>
     </>
